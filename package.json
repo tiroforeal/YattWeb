@@ -1,14 +1,11 @@
 {
-  "name": "YattWeb",
+  "name": "yattweb",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "typescript": "^6.0.3"
-  },
-  "private": true
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  }
 }

@@ -1,9 +1,11 @@
-import {eventType} from "./eventType";
-import {activityType} from "./activity";
-import {newsType} from "./newsType";
+import {activityPostType} from "./documentTypes/activityPostType";
+import {memberType} from "./documentTypes/memberType";
+import {videoEmbedType} from "./objectTypes/videoEmbedType";
+import {galleryType} from "./objectTypes/galleryType";
 
 export const schemaTypes = [
-    eventType,
-    activityType,
-    newsType,
+    memberType,
+    activityPostType,
+    galleryType,
+    videoEmbedType,
 ]

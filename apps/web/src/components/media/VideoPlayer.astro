@@ -1,0 +1,27 @@
+---
+import {checkDriveEmbedUrl} from "../../helpers/media/videoHelpers.ts";
+interface Props {
+    url: string;
+    caption?: string;
+}
+
+const { url, caption } = Astro.props;
+
+let embedUrl = checkDriveEmbedUrl(url);
+---
+
+<figure class = "my-6">
+    <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md">
+        <iframe
+            src={`${embedUrl}${embedUrl.includes("?") ? "&" : "?"}autoplay=1&mute=1`}
+            class="absolute top-0 left-0 w-full h-full border-0"
+            allow="autoplay; encrypted-media;"
+            allowfullscreen={true}
+        ></iframe>
+    </div>
+    {caption && (
+        <figcaption class="text-center text-xs text-slate-400 mt-2 italic">
+            {caption}
+        </figcaption>
+    )}
+</figure>

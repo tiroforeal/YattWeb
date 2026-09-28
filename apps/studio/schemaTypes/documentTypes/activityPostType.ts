@@ -40,7 +40,7 @@ export const activityPostType = defineType({
             title: 'Short Excerpt / Summary',
             type: 'text',
             rows: 2,
-            description: 'Brief summary displayed on the activity card preview.',
+            description: 'Brief summary displayed on the activities card preview.',
         }),
         defineField({
             name: 'location',
@@ -61,7 +61,7 @@ export const activityPostType = defineType({
             title: 'Club Participants',
             type: 'array',
             of: [{ type: 'reference', to: [{ type: 'memberType'}] }],
-            description: 'Add members who attended this activity or event',
+            description: 'Add members who attended this activities or event',
         }),
 
         // --- 3. DEDICATED PAGE BODY (BLOCK CONTENT) ---

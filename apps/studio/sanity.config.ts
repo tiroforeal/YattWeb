@@ -12,7 +12,9 @@ if (!dataset) throw new Error("Missing SANITY_STUDIO_DATASET in .env");
 export default defineConfig({
     projectId,
     dataset,
-    plugins: [structureTool()],
+    plugins: [
+        structureTool()
+    ],
     schema: {
         types: schemaTypes,
     },

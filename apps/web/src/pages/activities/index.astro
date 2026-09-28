@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ActivityCard from '../../components/Activities/ActivityCard.astro';
+import { sanityClient } from 'sanity:client';
+
+const activities = await sanityClient.fetch(`
+  *[_type == "activityPostType"] | order(eventDate desc) {
+    title,
+    "slug": slug.current,
+    eventDate,
+    location,
+    description,
+    "imageUrl": mainImage.asset->url
+  }
+`);
+---
+
+<BaseLayout title="Club Activities">
+    <header class="mb-10">
+        <h1 class="text-4xl font-extrabold text-emerald-400">YATT Activities</h1>
+        <p class="text-slate-400 mt-2">Explore outdoor trips hosted by our club.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {activities.map((item: { title: string; slug: string; eventDate: string | undefined; location: string | undefined; description: string | undefined; imageUrl: string | undefined; }) => (
+                <ActivityCard
+                        title={item.title}
+                        slug={item.slug}
+                        date={item.eventDate}
+                        location={item.location}
+                        description={item.description}
+                        imageUrl={item.imageUrl}
+                />
+        ))}
+    </div>
+</BaseLayout>

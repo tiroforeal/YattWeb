@@ -7,5 +7,10 @@
   ],
   "engines": {
     "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@portabletext/to-html": "^6.0.0",
+    "@portabletext/types": "^4.0.2",
+    "astro-portabletext": "^1.0.1"
   }
 }

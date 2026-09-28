@@ -1,0 +1,26 @@
+---
+import Sidebar from '../components/Navigation/Sidebar.astro';
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | Outdoor Sports Club</title>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex">
+<!-- Fixed Sidebar on the Left -->
+<Sidebar />
+
+<!-- Main Page Content Area -->
+<main class="flex-1 p-8 max-w-5xl mx-auto">
+    <slot />
+</main>
+</body>
+</html>

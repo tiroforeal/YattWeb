@@ -1,0 +1,32 @@
+---
+const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'Activities', href: '/activities' },
+    { name: 'Members', href: '/members' },
+    { name: 'Contact', href: '/contact' },
+];
+---
+
+<aside class="w-64 bg-slate-900 border-r border-slate-800 h-screen sticky top-0 flex flex-col justify-between p-6 shrink-0">
+    <div>
+        <!-- Club Branding / Logo -->
+
+        <!-- Navigation Links -->
+
+        <nav class="space-y-2">
+            {navLinks.map((link) => (
+                    <a
+                            href={link.href}
+                            class="block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition duration-200"
+                    >
+                        {link.name}
+                    </a>
+            ))}
+        </nav>
+    </div>
+
+    <!-- Sidebar Footer Info -->
+    <div class="pt-6 border-t border-slate-800 text-xs text-slate-500">
+        <p>© 2026 YATT</p>
+    </div>
+</aside>

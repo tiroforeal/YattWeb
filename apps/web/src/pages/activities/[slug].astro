@@ -1,0 +1,55 @@
+---
+
+import { sanityClient } from 'sanity:client';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PortableText as PortableTextInternal } from 'astro-portabletext';
+
+export async function getStaticPaths() {
+    const activities = await sanityClient.fetch(`*[_type == "activityPostType"]{ "slug": slug.current }`);
+
+    return activities.map((item) => ({
+        params: { slug: item.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+
+const activity = await sanityClient.fetch(
+    `*[_type == "activityPostType" && slug.current == $slug][0]{
+    title,
+    eventDate,
+    location,
+    description,
+    "imageUrl": mainImage.asset->url
+  }`,
+    { slug }
+);
+---
+
+<BaseLayout title={activity.title}>
+    <article class="max-w-3xl">
+        <a href="/activities" class="text-sm text-emerald-400 hover:underline mb-6 inline-block">
+            ← Back to all activities
+        </a>
+
+        <header class="mb-6">
+            <div class="flex items-center space-x-4 text-sm text-emerald-400 font-semibold mb-2">
+                <span>{activity.eventDate ? new Date(activity.eventDate).toLocaleDateString() : 'Date TBA'}</span>
+                {activity.location && <span>• {activity.location}</span>}
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white">{activity.title}</h1>
+        </header>
+
+        {activity.imageUrl && (
+                <img
+                        src={activity.imageUrl}
+                        alt={activity.title}
+                        class="w-full h-96 object-cover rounded-2xl mb-8 border border-slate-800 shadow-xl"
+                />
+        )}
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-slate-300 leading-relaxed">
+            <PortableTextInternal value={activity.description}></PortableTextInternal>
+        </div>
+    </article>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import {PortableText as PortableTextInternal} from 'astro-portabletext'
+import PortableTextImage from "./PortableTextImage.astro";
+import PortableTextGallery from "./PortableTextGallery.astro";
+import PortableTextVideoEmbed from "./PortableTextVideoEmbed.astro";
+const {portableText} = Astro.props;
+const components = {
+    type: {
+        image: PortableTextImage,
+        galleryType: PortableTextGallery,
+        videoEmbedType: PortableTextVideoEmbed,
+    }
+}
+---
+
+<PortableTextInternal value={portableText} components={components} />

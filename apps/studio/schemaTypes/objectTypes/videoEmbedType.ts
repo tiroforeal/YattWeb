@@ -14,5 +14,11 @@ export const videoEmbedType = defineType({
                 scheme: ['http', 'https'],
             }),
         }),
+        defineField({
+            name: 'caption',
+            title: 'Caption / Description',
+            type: 'string',
+            description: 'Optional caption or description for the video.',
+        })
     ],
 });

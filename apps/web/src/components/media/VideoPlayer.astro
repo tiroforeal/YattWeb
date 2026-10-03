@@ -1,27 +1,30 @@
 ---
-import {checkDriveEmbedUrl} from "../../helpers/media/videoHelpers.ts";
-interface Props {
-    url: string;
-    caption?: string;
-}
+import { resolveVideo } from '../../helpers/media/videoHelpers.ts';
+interface Props { url: string; caption?: string; autoplay?: boolean }
+const { url, caption, autoplay = false } = Astro.props;
 
-const { url, caption } = Astro.props;
-
-let embedUrl = checkDriveEmbedUrl(url);
+const video = resolveVideo(url);
+const src = video.kind === 'iframe' && autoplay
+    ? `${video.src}${video.src.includes('?') ? '&' : '?'}autoplay=1&mute=1`
+    : video.src;
 ---
-
-<figure class = "my-6">
+<figure class="my-6">
     <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md">
-        <iframe
-            src={`${embedUrl}${embedUrl.includes("?") ? "&" : "?"}autoplay=1&mute=1`}
-            class="absolute top-0 left-0 w-full h-full border-0"
-            allow="autoplay; encrypted-media;"
-            allowfullscreen={true}
-        ></iframe>
+        {video.kind === 'file' ? (
+                <video src={src} controls preload="metadata" class="absolute inset-0 w-full h-full"></video>
+        ) : (
+                <iframe
+                    src={src}
+                    title={caption ?? 'Embedded video'}
+                    loading="lazy"
+                    class="absolute inset-0 w-full h-full border-0"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen></iframe>
+        )}
     </div>
-    {caption && (
-        <figcaption class="text-center text-xs text-slate-400 mt-2 italic">
-            {caption}
-        </figcaption>
-    )}
+    {caption &&
+            <figcaption
+                    class="text-center text-xs text-slate-400 mt-2 italic">{caption}
+            </figcaption>
+    }
 </figure>

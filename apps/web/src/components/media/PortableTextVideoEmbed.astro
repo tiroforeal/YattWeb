@@ -1,0 +1,8 @@
+---
+import type { Props as PTProps } from 'astro-portabletext/types'
+import VideoPlayer from './VideoPlayer.astro'
+
+export interface Props extends PTProps<{ _type: 'videoEmbedType'; url: string; caption?: string }> {}
+const { node } = Astro.props
+---
+<VideoPlayer url={node.url} caption={node.caption} />

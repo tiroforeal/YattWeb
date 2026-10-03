@@ -1,0 +1,12 @@
+---
+import PortableTextImage from './PortableTextImage.astro';
+const { node } = Astro.props;
+const { title, images = [] } = node;
+---
+
+<section class="gallery">
+    {title && <h3>{title}</h3>}
+    <div class="gallery__grid">
+        {images.map((image: any) => <PortableTextImage node={image} />)}
+    </div>
+</section>

@@ -10,6 +10,8 @@ if (!projectId) throw new Error("Missing SANITY_STUDIO_PROJECT_ID in .env");
 if (!dataset) throw new Error("Missing SANITY_STUDIO_DATASET in .env");
 
 export default defineConfig({
+    name: "yatt",
+    title: "YATT",
     projectId,
     dataset,
     plugins: [

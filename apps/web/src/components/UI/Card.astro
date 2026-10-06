@@ -1,0 +1,16 @@
+---
+interface Props { href?: string; class?: string }
+const { href, class: className } = Astro.props;
+const Tag = href ? 'a' : 'div'; // dynamic tag
+---
+
+<Tag
+        href={href}
+        class:list={[
+            "group block overflow-hidden rounded-card bg-surface border border-border-subtle",
+            "transition hover:border-text-primary",
+            className,
+        ]}
+>
+    <slot />
+</Tag>

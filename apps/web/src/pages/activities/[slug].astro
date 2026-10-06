@@ -3,7 +3,7 @@
 import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PortableText as PortableTextInternal } from 'astro-portabletext';
-import PortableText from "../../components/media/PortableText.astro";
+import PortableText from "../../components/Media/PortableText.astro";
 
 export async function getStaticPaths() {
     const activities = await sanityClient.fetch(`*[_type == "activityPostType"]{ "slug": slug.current }`);

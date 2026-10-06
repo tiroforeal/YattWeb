@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+    --color-ink-950: #0a0a0a;
+    --color-ink-900: #141414;
+    --color-ink-700: #3f3f3f;
+    --color-ink-400: #a3a3a3;
+    --color-paper:   #fafafa;
+    --color-white:   #ffffff;
+    --color-accent:  #527FF1;
+
+    --color-surface:       var(--color-ink-900);
+    --color-border-subtle: var(--color-ink-700);
+    --color-text-primary:  var(--color-paper);
+    --color-text-muted:    var(--color-ink-400);
+
+    --font-sans: "Inter", system-ui, sans-serif;
+    --radius-card: 0.75rem;
+}

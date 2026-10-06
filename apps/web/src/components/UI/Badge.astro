@@ -1,0 +1,7 @@
+---
+// components/ui/Badge.astro
+const { class: className = "" } = Astro.props;
+---
+<span class:list={["text-xs uppercase tracking-wide text-text-muted", className]}>
+  <slot />
+</span>

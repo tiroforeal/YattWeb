@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import Sidebar from '../components/Navigation/Sidebar.astro';
 
 interface Props {
@@ -14,7 +15,7 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <title>{title} | Outdoor Sports Club</title>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex">
+<body class="bg-ink-950 text-text-primary font-sans min-h-screen flex">
 <!-- Fixed Sidebar on the Left -->
 <Sidebar />
 

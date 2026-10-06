@@ -1,4 +1,6 @@
 ---
+import YattLogo from '../../assets/YATT.svg';
+
 const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Activities', href: '/activities' },
@@ -7,26 +9,51 @@ const navLinks = [
 ];
 ---
 
-<aside class="w-64 bg-slate-900 border-r border-slate-800 h-screen sticky top-0 flex flex-col justify-between p-6 shrink-0">
-    <div>
-        <!-- Club Branding / Logo -->
+<aside
+        id="sidebar"
+        data-open="true"
+        class=" group sticky top-0 h-screen w-64 shrink-0
+         bg-surface border-r border-border-subtle p-6
+         transition-[margin] duration-300 ease-in-out
+         motion-reduce:transition-none
+         data-[open=false]:-ml-64"
+>
+    <!-- tab sticking out of the sidebar's right edge -->
+    <span
+        id="sidebar-arrow"
+        class="transition-transform duration-300 group-data-[open=false]:rotate-180"
+    >
+        <button
+                id="sidebar-toggle"
+                aria-label="Toggle sidebar"
+                aria-expanded="true"
+                aria-controls="sidebar"
+                class="absolute left-full top-6 flex h-20 w-20 items-center justify-center
+               rounded-r-md border border-l-0 border-border-subtle bg-surface
+               text-text-muted hover:text-text-primary"
+        >
+            <span
+                    class="block size-16 bg-accent transition-colors hover:bg-white"
+                    style={`mask: url(${YattLogo.src}) center / contain no-repeat;
+                    -webkit-mask: url(${YattLogo.src}) center / contain no-repeat;`}
+                    aria-hidden="true"
+            ></span>
+            <!--<span id="sidebar-arrow" class="transition-transform duration-300">‹</span>-->
+        </button>
+    </span>
 
-        <!-- Navigation Links -->
-
-        <nav class="space-y-2">
-            {navLinks.map((link) => (
-                    <a
-                            href={link.href}
-                            class="block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition duration-200"
-                    >
-                        {link.name}
-                    </a>
-            ))}
-        </nav>
-    </div>
-
-    <!-- Sidebar Footer Info -->
-    <div class="pt-6 border-t border-slate-800 text-xs text-slate-500">
-        <p>© 2026 YATT</p>
-    </div>
+    <nav class="space-y-2">
+        {navLinks.map((l) => <a href={l.href} class="block px-4 py-2.5 text-sm text-text-muted hover:text-text-primary">{l.name}</a>)}
+    </nav>
 </aside>
+
+<script>
+    const sidebar = document.getElementById('sidebar')!;
+    const toggle = document.getElementById('sidebar-toggle')!;
+
+    toggle.addEventListener('click', () => {
+        const open = sidebar.dataset.open === 'true';
+        sidebar.dataset.open = String(!open);
+        toggle.setAttribute('aria-expanded', String(!open));
+    });
+</script>

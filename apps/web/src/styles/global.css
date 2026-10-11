@@ -1,19 +1,29 @@
 @import "tailwindcss";
 
+@import "tailwindcss";
+
 @theme {
-    --color-ink-950: #0a0a0a;
-    --color-ink-900: #141414;
-    --color-ink-700: #3f3f3f;
-    --color-ink-400: #a3a3a3;
-    --color-paper:   #fafafa;
-    --color-white:   #ffffff;
-    --color-accent:  #527FF1;
+    /* 1. Primitives: Clean Monochromes */
+    --color-ink-950: #09090b; /* Page background */
+    --color-ink-900: #121215; /* Card / Surface background */
+    --color-ink-850: #18181b; /* Elevated surface / hover */
+    --color-ink-700: #27272a; /* Borders, dividers */
+    --color-ink-500: #71717a; /* Subtle icons, muted details */
+    --color-ink-400: #a1a1aa; /* Secondary / muted text */
+    --color-ink-200: #e4e4e7; /* Primary headings / high contrast */
+    --color-paper:   #fafafa; /* Pure foreground text */
 
-    --color-surface:       var(--color-ink-900);
-    --color-border-subtle: var(--color-ink-700);
-    --color-text-primary:  var(--color-paper);
-    --color-text-muted:    var(--color-ink-400);
+    /* Optional single brand accent */
+    --color-accent:  #527ff1;
 
-    --font-sans: "Inter", system-ui, sans-serif;
+    /* 2. Semantic Aliases used in markup */
+    --color-bg-base:        var(--color-ink-950);
+    --color-surface:        var(--color-ink-900);
+    --color-surface-hover:  var(--color-ink-850);
+    --color-border-subtle:  var(--color-ink-700);
+    --color-text-primary:   var(--color-paper);
+    --color-text-muted:     var(--color-ink-400);
+
+    /* Radius & Spacing rules */
     --radius-card: 0.75rem;
 }

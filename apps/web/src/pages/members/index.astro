@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MemberCard from '../../components/Members/MemberCard.astro';
+import { sanityClient } from 'sanity:client';
+import type { SanityImageSource } from '@sanity/image-url';
+
+interface Member {
+    name: string;
+    role?: string;
+    bio?: string;
+    avatar?: SanityImageSource;
+    priority?: number;
+}
+
+const members: Member[] = await sanityClient.fetch(`
+  *[_type == "memberType"] | order(priority desc) {
+    name,
+    role,
+    bio,
+    avatar,
+    priority,
+  }
+`);
+---
+
+<BaseLayout title="Club Members">
+    <header class="mb-10">
+        <h1 class="text-4xl font-extrabold text-text-primary tracking-tight">Our Members</h1>
+        <p class="text-text-muted mt-2 text-base">Meet the guides, organizers, and outdoor enthusiasts behind YATT.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {members.map((member) => (
+            <MemberCard
+                name={member.name}
+                role={member.role}
+                bio={member.bio}
+                avatar={member.avatar}
+                priority={member.priority}
+            />
+        ))}
+    </div>
+</BaseLayout>
+

@@ -1,0 +1,62 @@
+---
+import Card from '../UI/Card.astro';
+import Avatar from '../UI/Avatar.astro';
+import Badge from '../UI/Badge.astro';
+import { urlForImage } from '../../sanity/lib/url-for-image';
+import type { SanityImageSource } from '@sanity/image-url';
+
+interface Props {
+    name: string;
+    role?: string;
+    avatar?: SanityImageSource;
+    avatarUrl?: string;
+    bio?: string;
+    priority?: number;
+}
+
+const { name, role, avatar, avatarUrl, bio, priority } = Astro.props;
+
+// Use Sanity's crop/hotspot metadata if avatar object is provided, fallback to raw avatarUrl
+const resolvedAvatarUrl = avatar
+    ? urlForImage(avatar).width(200).height(200).fit('crop').auto('format').url()
+    : avatarUrl;
+---
+
+<div class="pt-8 w-full">
+    <Card overflow="visible" class="relative flex flex-col items-center text-center px-6 pb-6 pt-12 min-h-[200px] w-full">
+        <!-- Avatar peeking out above card: centered across top border, layered in front -->
+        <div class="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
+            <Avatar src={resolvedAvatarUrl} alt={name} size="lg" />
+        </div>
+
+        <!-- Member Name & Role -->
+        <div class="space-y-1 shrink-0 px-2 w-full">
+            <h3 class="text-base font-semibold text-text-primary tracking-tight truncate" title={name}>
+                {name}
+            </h3>
+            {role ? (
+                <Badge class="text-xs uppercase tracking-wider text-text-muted font-medium truncate block">
+                    {role}
+                </Badge>
+            ) : (
+                <span class="block h-4" aria-hidden="true"></span>
+            )}
+        </div>
+
+        <!-- Divider -->
+        <hr class="w-12 border-t border-border-subtle my-3 shrink-0" />
+
+        <!-- Bio / Description with controlled uniform spacing -->
+        <div class="flex-1 w-full flex items-start justify-center overflow-hidden px-2">
+            {bio ? (
+                <p class="text-xs leading-relaxed text-text-muted">
+                    {bio}
+                </p>
+            ) : (
+                <p class="text-xs italic text-ink-400 mt-2">
+                    No bio provided.
+                </p>
+            )}
+        </div>
+    </Card>
+</div>

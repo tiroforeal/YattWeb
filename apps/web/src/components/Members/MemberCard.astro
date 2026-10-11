@@ -12,24 +12,47 @@ interface Props {
     avatarUrl?: string;
     bio?: string;
     priority?: number;
+    avatarSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
-const { name, role, avatar, avatarUrl, bio, priority } = Astro.props;
+const {
+    name,
+    role,
+    avatar,
+    avatarUrl,
+    bio,
+    priority,
+    avatarSize = '2xl'
+} = Astro.props;
+
+// Dimension mapping to calculate exact 50% upward pull in document flow
+const avatarDimensions: Record<string, string> = {
+    sm: '2rem',   // 32px -> -16px margin-top
+    md: '3rem',   // 48px -> -24px margin-top
+    lg: '4rem',   // 64px -> -32px margin-top
+    xl: '5rem',   // 80px -> -40px margin-top
+    '2xl': '6rem',// 96px -> -48px margin-top
+};
+
+const dimension = avatarDimensions[avatarSize] ?? avatarDimensions['2xl'];
 
 // Use Sanity's crop/hotspot metadata if avatar object is provided, fallback to raw avatarUrl
 const resolvedAvatarUrl = avatar
-    ? urlForImage(avatar).width(200).height(200).fit('crop').auto('format').url()
+    ? urlForImage(avatar).width(300).height(300).fit('crop').auto('format').url()
     : avatarUrl;
 ---
 
-<div class="pt-8 w-full">
-    <Card overflow="visible" class="relative flex flex-col items-center text-center px-6 pb-6 pt-12 min-h-[200px] w-full">
-        <!-- Avatar peeking out above card: centered across top border, layered in front -->
-        <div class="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
-            <Avatar src={resolvedAvatarUrl} alt={name} size="lg" />
+<div class="pt-12 w-full h-full flex flex-col">
+    <Card overflow="visible" class="relative flex flex-col items-center text-center px-6 pb-6 pt-0 w-full h-full min-h-[110px]">
+        <!-- Avatar in-flow block: shifts layout up by 50% so gap to content below is always constant (mb-4 / 16px) -->
+        <div
+            class="shrink-0 z-10 flex justify-center mb-4"
+            style={`margin-top: calc(-1 * ${dimension} / 2);`}
+        >
+            <Avatar src={resolvedAvatarUrl} alt={name} size={avatarSize} />
         </div>
 
-        <!-- Member Name & Role -->
+        <!-- Member Name & Role: flows dynamically below avatar block without collision -->
         <div class="space-y-1 shrink-0 px-2 w-full">
             <h3 class="text-base font-semibold text-text-primary tracking-tight truncate" title={name}>
                 {name}
@@ -46,16 +69,16 @@ const resolvedAvatarUrl = avatar
         <!-- Divider -->
         <hr class="w-12 border-t border-border-subtle my-3 shrink-0" />
 
-        <!-- Bio / Description with controlled uniform spacing -->
-        <div class="flex-1 w-full flex items-start justify-center overflow-hidden px-2">
+        <!-- Bio / Description: dynamic flex block adapting to available space -->
+        <div class="flex-1 min-h-0 w-full         flex items-center justify-center px-2">
             {bio ? (
-                <p class="text-xs leading-relaxed text-text-muted">
-                    {bio}
-                </p>
+                            <p class="w-full min-w-0 text-center text-xs leading-relaxed text-text-muted break-words [overflow-wrap:anywhere] text-pretty">
+                        {bio}
+                    </p>
             ) : (
-                <p class="text-xs italic text-ink-400 mt-2">
-                    No bio provided.
-                </p>
+                    <p class="text-center text-xs italic text-ink-400">
+                        No bio provided.
+                    </p>
             )}
         </div>
     </Card>

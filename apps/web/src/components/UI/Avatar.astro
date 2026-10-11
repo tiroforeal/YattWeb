@@ -2,7 +2,7 @@
 interface Props {
     src?: string | null;
     alt: string;
-    size?: 'sm' | 'md' | 'lg' | 'xl';
+    size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     class?: string;
 }
 
@@ -13,6 +13,8 @@ const sizeClasses = {
     md: 'w-12 h-12 text-sm',
     lg: 'w-16 h-16 text-base',
     xl: 'w-20 h-20 text-lg',
+    '2xl': 'w-24 h-24 text-xl',
+    undefined: 'w-16 h-16 text-base',
 };
 
 const initials = alt

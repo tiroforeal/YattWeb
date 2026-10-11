@@ -32,7 +32,7 @@ export const memberType = defineType({
             rows: 3,
             description: 'Brief summary displayed on the member card preview.',
             validation: (Rule) =>
-                Rule.max(200).error('Bio must be 200 characters or less.'),
+                Rule.max(50).error('Bio must be 50 characters or less.'),
         }),
         defineField({
             name: 'priority',

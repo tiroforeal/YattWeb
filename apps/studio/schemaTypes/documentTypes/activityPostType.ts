@@ -62,6 +62,7 @@ export const activityPostType = defineType({
             type: 'array',
             of: [{ type: 'reference', to: [{ type: 'memberType'}] }],
             description: 'Add members who attended this activities or event',
+            validation: (Rule) => Rule.unique(),
         }),
 
         // --- 3. DEDICATED PAGE BODY (BLOCK CONTENT) ---

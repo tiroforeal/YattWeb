@@ -1,6 +1,7 @@
 ---
 import Card from '../UI/Card.astro';
 import Badge from '../UI/Badge.astro';
+import AvatarGroup, { type GroupMember } from '../UI/AvatarGroup.astro';
 
 interface Props {
     title: string;
@@ -9,9 +10,10 @@ interface Props {
     location?: string;
     excerpt?: string;
     imageUrl?: string;
+    attendees?: GroupMember[];
 }
 
-const { title, slug, date, location, excerpt, imageUrl } = Astro.props;
+const { title, slug, date, location, excerpt, imageUrl, attendees } = Astro.props;
 ---
 
 <Card href={`/activities/${slug}`} class="group flex flex-col h-full">
@@ -27,10 +29,11 @@ const { title, slug, date, location, excerpt, imageUrl } = Astro.props;
     )}
 
     <div class="flex flex-1 p-5 justify-between gap-4">
+        <!-- Left Content Column -->
         <div class="flex-1 space-y-2">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 flex-wrap">
                 {date && <Badge>{new Date(date).toLocaleDateString()}</Badge>}
-                {<Badge> · </Badge>}
+                {date && location && <Badge> · </Badge>}
                 {location && <Badge class="text-ink-500">{location}</Badge>}
             </div>
 
@@ -41,8 +44,18 @@ const { title, slug, date, location, excerpt, imageUrl } = Astro.props;
             {excerpt && <p class="text-sm text-text-muted line-clamp-2">{excerpt}</p>}
         </div>
 
-        <span class="mt-auto shrink-0 self-end text-xs font-medium text-ink-500 group-hover:text-text-primary transition-colors">
-      View event &rarr;
-    </span>
+        <!-- Right Side Column: Avatars at the top, View event at the bottom -->
+        <div class="flex flex-col justify-between items-end shrink-0">
+            {attendees && attendees.length > 0 ? (
+                <AvatarGroup members={attendees} limit={3} size="sm" />
+            ) : (
+                <div class="h-8"></div>
+            )}
+            <!--
+            <span class="mt-auto shrink-0 text-xs font-medium text-ink-500 group-hover:text-text-primary transition-colors pt-2">
+                View event &rarr;
+            </span>
+            -->
+        </div>
     </div>
 </Card>

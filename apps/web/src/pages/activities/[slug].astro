@@ -4,6 +4,7 @@ import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PortableText as PortableTextInternal } from 'astro-portabletext';
 import PortableText from "../../components/Media/PortableText.astro";
+import AvatarGroup from '../../components/UI/AvatarGroup.astro';
 
 export async function getStaticPaths() {
     const activities = await sanityClient.fetch(`*[_type == "activityPostType"]{ "slug": slug.current }`);
@@ -24,6 +25,12 @@ const activity = await sanityClient.fetch(
     description,
     "imageUrl": mainImage.asset->url,
     body,
+    "attendees": attendees[]->{
+      name,
+      role,
+      avatar,
+      priority
+    }
   }`,
     { slug }
 );
@@ -36,9 +43,15 @@ const activity = await sanityClient.fetch(
         </a>
 
         <header class="mb-6">
-            <div class="flex items-center space-x-4 text-sm text-emerald-400 font-semibold mb-2">
-                <span>{activity.eventDate ? new Date(activity.eventDate).toLocaleDateString() : 'Date TBA'}</span>
-                {activity.location && <span>• {activity.location}</span>}
+            <div class="flex items-center justify-between gap-4 mb-2 flex-wrap">
+                <div class="flex items-center space-x-4 text-sm text-emerald-400 font-semibold">
+                    <span>{activity.eventDate ? new Date(activity.eventDate).toLocaleDateString() : 'Date TBA'}</span>
+                    {activity.location && <span>• {activity.location}</span>}
+                </div>
+
+                {activity.attendees && activity.attendees.length > 0 && (
+                    <AvatarGroup members={activity.attendees} size="md" />
+                )}
             </div>
             <h1 class="text-4xl md:text-5xl font-extrabold text-white">{activity.title}</h1>
         </header>

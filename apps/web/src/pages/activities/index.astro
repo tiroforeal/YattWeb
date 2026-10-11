@@ -10,7 +10,13 @@ const activities = await sanityClient.fetch(`
     eventDate,
     location,
     excerpt,
-    "imageUrl": mainImage.asset->url
+    "imageUrl": mainImage.asset->url,
+    "attendees": attendees[]->{
+      name,
+      role,
+      avatar,
+      priority
+    }
   }
 `);
 ---
@@ -22,7 +28,7 @@ const activities = await sanityClient.fetch(`
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <!--max-w-4xl-->
-        {activities.map((item: { title: string; slug: string; eventDate: string | undefined; location: string | undefined; excerpt: string | undefined; imageUrl: string | undefined; }) => (
+        {activities.map((item: any) => (
                 <ActivityCard
                         title={item.title}
                         slug={item.slug}
@@ -30,6 +36,7 @@ const activities = await sanityClient.fetch(`
                         location={item.location}
                         excerpt={item.excerpt}
                         imageUrl={item.imageUrl}
+                        attendees={item.attendees}
                 />
         ))}
     </div>

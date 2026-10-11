@@ -1,12 +1,20 @@
 ---
+import { urlForImage } from '../../sanity/lib/url-for-image';
+import type { SanityImageSource } from '@sanity/image-url';
+
 interface Props {
     src?: string | null;
+    avatar?: SanityImageSource | null;
     alt: string;
     size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     class?: string;
 }
 
-const { src, alt, size = 'lg', class: className } = Astro.props;
+const { src, avatar, alt, size = 'lg', class: className } = Astro.props;
+
+const resolvedSrc = avatar
+    ? urlForImage(avatar).width(200).height(200).fit('crop').auto('format').url()
+    : src;
 
 const sizeClasses = {
     sm: 'w-8 h-8 text-xs',
@@ -14,8 +22,9 @@ const sizeClasses = {
     lg: 'w-16 h-16 text-base',
     xl: 'w-20 h-20 text-lg',
     '2xl': 'w-24 h-24 text-xl',
-    undefined: 'w-16 h-16 text-base',
 };
+
+const ringClass = size === 'sm' ? 'ring-2 ring-surface' : 'ring-4 ring-surface';
 
 const initials = alt
     .split(' ')
@@ -28,14 +37,15 @@ const initials = alt
 
 <div
     class:list={[
-        "relative shrink-0 rounded-full border-2 border-border-subtle bg-surface ring-4 ring-surface shadow-md aspect-square flex items-center justify-center select-none overflow-hidden",
+        "relative shrink-0 rounded-full border-2 border-border-subtle bg-surface shadow-md aspect-square flex items-center justify-center select-none overflow-hidden",
+        ringClass,
         sizeClasses[size] ?? sizeClasses.lg,
         className,
     ]}
 >
-    {src ? (
+    {resolvedSrc ? (
         <img
-            src={src}
+            src={resolvedSrc}
             alt={alt}
             class="w-full h-full object-cover rounded-full"
             loading="lazy"

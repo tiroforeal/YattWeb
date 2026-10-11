@@ -47,13 +47,39 @@ const navLinks = [
     </nav>
 </aside>
 
-<script>
-    const sidebar = document.getElementById('sidebar')!;
-    const toggle = document.getElementById('sidebar-toggle')!;
+<script is:inline>
+    (() => {
+        const saved = localStorage.getItem('sidebar-open');
+        if (saved !== null) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebar-toggle');
+            if (sidebar) sidebar.dataset.open = saved;
+            if (toggle) toggle.setAttribute('aria-expanded', saved);
+        }
+    })();
+</script>
 
-    toggle.addEventListener('click', () => {
-        const open = sidebar.dataset.open === 'true';
-        sidebar.dataset.open = String(!open);
-        toggle.setAttribute('aria-expanded', String(!open));
-    });
+<script>
+    function setupSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebar-toggle');
+        if (!sidebar || !toggle) return;
+
+        const saved = localStorage.getItem('sidebar-open');
+        if (saved !== null) {
+            sidebar.dataset.open = saved;
+            toggle.setAttribute('aria-expanded', saved);
+        }
+
+        toggle.onclick = () => {
+            const isOpen = sidebar.dataset.open === 'true';
+            const nextState = String(!isOpen);
+            sidebar.dataset.open = nextState;
+            toggle.setAttribute('aria-expanded', nextState);
+            localStorage.setItem('sidebar-open', nextState);
+        };
+    }
+
+    setupSidebar();
+    document.addEventListener('astro:page-load', setupSidebar);
 </script>

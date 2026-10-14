@@ -1,11 +1,135 @@
 ---
+import { Image } from 'astro:assets';
 import { urlForImage } from '../../sanity/lib/url-for-image';
-const { node } = Astro.props;
-const url = urlForImage(node.asset).url();
-const webpUrl = urlForImage(node.asset).format('webp').url();
+
+const { node, index, loading: propLoading } = Astro.props;
+
+// Determine loading strategy:
+// Prioritize explicit prop, then node.loading, fallback to eager for initial 2 blocks, lazy thereafter
+const loading = propLoading || node?.loading || (typeof index === 'number' ? (index < 2 ? 'eager' : 'lazy') : 'lazy');
+
+// Extract intrinsic dimensions from Sanity asset _ref if available (e.g. image-assetId-1200x800-jpg)
+const ref = node?.asset?._ref || node?.asset?._id || '';
+const dimensionsMatch = ref.match(/-(\d+)x(\d+)-/);
+const originalWidth = dimensionsMatch ? parseInt(dimensionsMatch[1], 10) : 1200;
+const originalHeight = dimensionsMatch ? parseInt(dimensionsMatch[2], 10) : 800;
+
+// Constrain display dimensions while preserving exact aspect ratio
+const displayWidth = Math.min(originalWidth, 1200);
+const displayHeight = Math.round((originalHeight / originalWidth) * displayWidth);
+
+const url = urlForImage(node.asset).width(displayWidth).auto('format').url();
+const fullResUrl = urlForImage(node.asset).width(Math.min(originalWidth, 2400)).auto('format').url();
 ---
 
-<picture>
-    <source srcset={webpUrl} type="image/webp" />
-    <img class="responsive__img" src={url} alt={node.alt} />
-</picture>
+<figure class="my-6 single-image-figure">
+    <button
+        type="button"
+        class="single-image-zoom group/zoom relative w-full block cursor-zoom-in focus:outline-none rounded-xl overflow-hidden"
+        aria-label={`Enlarge image: ${node.alt || 'image'}`}
+    >
+        <Image
+            src={url}
+            alt={node.alt || ''}
+            width={displayWidth}
+            height={displayHeight}
+            class="w-full h-auto rounded-xl object-cover border border-border-subtle shadow-md group-hover/zoom:scale-[1.008] transition-transform duration-200"
+            loading={loading}
+        />
+        <span class="absolute bottom-3 right-3 opacity-0 group-hover/zoom:opacity-100 transition-opacity flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 text-white text-xs font-medium backdrop-blur-sm pointer-events-none">
+            <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
+            </svg>
+            <span>Click to enlarge</span>
+        </span>
+    </button>
+    {node.caption && (
+        <figcaption class="text-center text-xs text-text-muted mt-2 italic">
+            {node.caption}
+        </figcaption>
+    )}
+
+    <!-- Lightbox Modal Dialog (HTML5 Standard <dialog>) -->
+    <dialog
+        class="lightbox-dialog fixed inset-0 m-0 p-0 w-screen h-screen max-w-none max-h-none bg-transparent border-0 outline-none z-50"
+        aria-label="Enlarged image preview"
+    >
+        <div class="lightbox-backdrop flex flex-col items-center justify-center w-full h-full p-4 sm:p-8 bg-black/85 backdrop-blur-md relative cursor-zoom-out select-none">
+            <button
+                type="button"
+                class="lightbox-close absolute top-4 right-4 z-50 flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/25 text-white backdrop-blur-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Close enlarged view (Esc)"
+                title="Close (Esc)"
+            >
+                <svg class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Native <img> element with high-res source for crystal clear view and direct right-click copy -->
+            <div class="lightbox-content relative flex flex-col items-center justify-center max-w-[92vw] max-h-[85vh] cursor-default select-auto">
+                <img
+                    class="lightbox-img max-w-[92vw] max-h-[80vh] w-auto h-auto object-contain rounded-lg shadow-2xl select-auto"
+                    src={fullResUrl}
+                    alt={node.alt || ''}
+                />
+                {node.caption && (
+                    <p class="lightbox-caption text-center text-sm text-neutral-300 mt-3 max-w-2xl px-4 min-h-[1.25rem]">
+                        {node.caption}
+                    </p>
+                )}
+            </div>
+        </div>
+    </dialog>
+</figure>
+
+<script>
+    function initSingleImageLightbox() {
+        const figures = document.querySelectorAll<HTMLElement>('.single-image-figure');
+        figures.forEach((fig) => {
+            if (fig.dataset.initialized === 'true') return;
+            fig.dataset.initialized = 'true';
+
+            const zoomBtn = fig.querySelector<HTMLButtonElement>('.single-image-zoom');
+            const dialog = fig.querySelector<HTMLDialogElement>('.lightbox-dialog');
+            const closeBtn = dialog?.querySelector<HTMLButtonElement>('.lightbox-close');
+            const backdrop = dialog?.querySelector<HTMLElement>('.lightbox-backdrop');
+
+            function openModal() {
+                if (!dialog) return;
+                dialog.showModal();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                if (!dialog || !dialog.open) return;
+                dialog.close();
+                document.body.style.overflow = '';
+            }
+
+            zoomBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openModal();
+            });
+
+            closeBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeModal();
+            });
+
+            backdrop?.addEventListener('click', (e) => {
+                if (e.target === backdrop) {
+                    closeModal();
+                }
+            });
+
+            dialog?.addEventListener('cancel', () => {
+                document.body.style.overflow = '';
+            });
+        });
+    }
+
+    initSingleImageLightbox();
+    document.addEventListener('astro:page-load', initSingleImageLightbox);
+</script>
+

@@ -1,16 +1,44 @@
 ---
-import {PortableText as PortableTextInternal} from 'astro-portabletext'
+import { PortableText as PortableTextInternal } from 'astro-portabletext';
 import PortableTextImage from "./PortableTextImage.astro";
 import PortableTextGallery from "./PortableTextGallery.astro";
 import PortableTextVideoEmbed from "./PortableTextVideoEmbed.astro";
-const {portableText} = Astro.props;
+
+const { portableText } = Astro.props;
+
+// Preprocess blocks to eagerly load the first 2 images that render above the fold,
+// and lazily load all subsequent images below the fold to satisfy performance audits.
+let imageIndex = 0;
+const enrichedPortableText = Array.isArray(portableText)
+    ? portableText.map((block: any) => {
+        if (block._type === 'image') {
+            imageIndex++;
+            return {
+                ...block,
+                loading: imageIndex <= 2 ? 'eager' : 'lazy',
+            };
+        }
+        if (block._type === 'galleryType' && Array.isArray(block.images)) {
+            const images = block.images.map((img: any) => {
+                imageIndex++;
+                return {
+                    ...img,
+                    loading: imageIndex <= 2 ? 'eager' : 'lazy',
+                };
+            });
+            return { ...block, images };
+        }
+        return block;
+    })
+    : portableText;
+
 const components = {
     type: {
         image: PortableTextImage,
         galleryType: PortableTextGallery,
         videoEmbedType: PortableTextVideoEmbed,
     }
-}
+};
 ---
 
-<PortableTextInternal value={portableText} components={components} />
+<PortableTextInternal value={enrichedPortableText} components={components} />

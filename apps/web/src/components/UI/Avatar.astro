@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { urlForImage } from '../../sanity/lib/url-for-image';
 import type { SanityImageSource } from '@sanity/image-url';
 
@@ -8,12 +9,23 @@ interface Props {
     alt: string;
     size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     class?: string;
+    loading?: 'lazy' | 'eager';
 }
 
-const { src, avatar, alt, size = 'lg', class: className } = Astro.props;
+const { src, avatar, alt, size = 'lg', class: className, loading = 'eager' } = Astro.props;
+
+const avatarPixelDimensions: Record<string, number> = {
+    sm: 32,
+    md: 48,
+    lg: 64,
+    xl: 80,
+    '2xl': 96,
+};
+
+const dimension = avatarPixelDimensions[size] ?? avatarPixelDimensions.lg;
 
 const resolvedSrc = avatar
-    ? urlForImage(avatar).width(200).height(200).fit('crop').auto('format').url()
+    ? urlForImage(avatar).width(dimension * 2).height(dimension * 2).fit('crop').auto('format').url()
     : src;
 
 const sizeClasses = {
@@ -24,7 +36,7 @@ const sizeClasses = {
     '2xl': 'w-24 h-24 text-xl',
 };
 
-const ringClass = size === 'sm' ? 'ring-2 ring-surface' : 'ring-4 ring-surface';
+const ringClass = size === 'sm' ? 'ring-1 ring-surface group-hover/avatar:ring-accent' : 'ring-2 ring-surface group-hover/avatar:ring-accent';
 
 const initials = alt
     .split(' ')
@@ -37,18 +49,20 @@ const initials = alt
 
 <div
     class:list={[
-        "relative shrink-0 rounded-full border-2 border-border-subtle bg-surface shadow-md aspect-square flex items-center justify-center select-none overflow-hidden",
+        "relative shrink-0 rounded-full border border-border-subtle group-hover/avatar:border-accent bg-surface shadow-xs aspect-square flex items-center justify-center select-none overflow-hidden transition-all duration-200",
         ringClass,
         sizeClasses[size] ?? sizeClasses.lg,
         className,
     ]}
 >
     {resolvedSrc ? (
-        <img
+        <Image
             src={resolvedSrc}
             alt={alt}
+            width={dimension}
+            height={dimension}
             class="w-full h-full object-cover rounded-full"
-            loading="lazy"
+            loading={loading}
         />
     ) : (
         <span class="font-semibold text-text-muted uppercase tracking-wider">
@@ -56,3 +70,4 @@ const initials = alt
         </span>
     )}
 </div>
+

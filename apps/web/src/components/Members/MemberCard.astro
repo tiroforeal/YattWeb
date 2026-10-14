@@ -13,6 +13,7 @@ interface Props {
     bio?: string;
     priority?: number;
     avatarSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+    loading?: 'lazy' | 'eager';
 }
 
 const {
@@ -22,7 +23,8 @@ const {
     avatarUrl,
     bio,
     priority,
-    avatarSize = '2xl'
+    avatarSize = '2xl',
+    loading = 'eager'
 } = Astro.props;
 
 // Dimension mapping to calculate exact 50% upward pull in document flow
@@ -49,7 +51,7 @@ const resolvedAvatarUrl = avatar
             class="shrink-0 z-10 flex justify-center mb-4"
             style={`margin-top: calc(-1 * ${dimension} / 2);`}
         >
-            <Avatar src={resolvedAvatarUrl} alt={name} size={avatarSize} />
+            <Avatar src={resolvedAvatarUrl} alt={name} size={avatarSize} loading={loading} />
         </div>
 
         <!-- Member Name & Role: flows dynamically below avatar block without collision -->
@@ -76,7 +78,7 @@ const resolvedAvatarUrl = avatar
                         {bio}
                     </p>
             ) : (
-                    <p class="text-center text-xs italic text-ink-400">
+                    <p class="text-center text-xs italic text-text-muted opacity-75">
                         No bio provided.
                     </p>
             )}

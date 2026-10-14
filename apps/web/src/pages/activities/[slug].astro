@@ -37,33 +37,30 @@ const activity = await sanityClient.fetch(
 ---
 
 <BaseLayout title={activity.title}>
-    <article class="max-w-3xl">
-        <a href="/activities" class="text-sm text-emerald-400 hover:underline mb-6 inline-block">
-            ← Back to all activities
+    <article class="max-w-4xl">
+        <!--<a href="/activities" class="text-sm font-medium text-accent hover:text-accent-hover mb-6 inline-flex items-center gap-1 transition-colors">
+            &larr; Back to all activities
         </a>
-
-        <header class="mb-6">
-            <div class="flex items-center justify-between gap-4 mb-2 flex-wrap">
-                <div class="flex items-center space-x-4 text-sm text-emerald-400 font-semibold">
-                    <span>{activity.eventDate ? new Date(activity.eventDate).toLocaleDateString() : 'Date TBA'}</span>
-                    {activity.location && <span>• {activity.location}</span>}
+-->
+        <!-- Page Header with generous vertical spacing to content below -->
+        <header class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary">
+                {activity.title}
+            </h1>
+            <div class="flex items-center justify-between gap-4 mb-3 flex-wrap">
+                <div class="flex items-center space-x-3 text-sm text-accent font-semibold">
+                    <span>{activity.eventDate ? new Date(activity.eventDate).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Date TBA'}</span>
+                    {activity.location && <span>&bull; {activity.location}</span>}
                 </div>
 
                 {activity.attendees && activity.attendees.length > 0 && (
                     <AvatarGroup members={activity.attendees} size="md" />
                 )}
             </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white">{activity.title}</h1>
         </header>
 
-        <!--/*{activity.imageUrl && (
-                <img
-                        src={activity.imageUrl}
-                        alt={activity.title}
-                        class="w-full h-96 object-cover rounded-2xl mb-8 border border-slate-800 shadow-xl"
-                />
-        )}*/-->
-
-        <PortableText portableText={activity.body} />
+        <div class="prose-custom">
+            <PortableText portableText={activity.body} />
+        </div>
     </article>
 </BaseLayout>

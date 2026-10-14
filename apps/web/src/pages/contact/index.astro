@@ -1,3 +1,81 @@
 ---
-
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Card from "../../components/UI/Card.astro";
 ---
+
+<BaseLayout title="Contact Us">
+  <div class="w-full">
+    <!-- Page Header with generous vertical spacing -->
+    <header class="mb-12">
+      <h1 class="text-4xl font-extrabold text-text-primary tracking-tight">Get in Touch</h1>
+      <p class="text-text-muted mt-2 text-base">Have a question or want to get involved with YATT? Drop us a line.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Contact Form -->
+      <form class="md:col-span-2 bg-surface p-6 md:p-8 rounded-card border border-border-subtle shadow-xs space-y-5">
+        <div>
+          <label for="name" class="block text-sm font-medium text-text-primary mb-1.5">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Your name"
+            class="w-full px-4 py-2.5 rounded-lg bg-bg-base border border-border-subtle text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-text-primary mb-1.5">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="you@example.com"
+            class="w-full px-4 py-2.5 rounded-lg bg-bg-base border border-border-subtle text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          />
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-medium text-text-primary mb-1.5">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            placeholder="How can we help?"
+            class="w-full px-4 py-2.5 rounded-lg bg-bg-base border border-border-subtle text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="px-6 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium shadow-xs transition-colors cursor-pointer"
+        >
+          Send Message
+        </button>
+      </form>
+
+      <!-- Contact Info Sidebar Column -->
+      <div class="space-y-6">
+        <Card class="p-6">
+          <h2 class="text-base font-semibold text-text-primary mb-2">Club Inquiries</h2>
+          <p class="text-sm text-text-muted leading-relaxed">
+            Interested in leading an event, joining as a guide, or partnering with our community? Reach out directly through the form.
+          </p>
+        </Card>
+
+        <Card class="p-6">
+          <h2 class="text-base font-semibold text-text-primary mb-2">Activities & Gear</h2>
+          <p class="text-sm text-text-muted leading-relaxed">
+            Trip announcements and gear checklists are posted on our Activities page before each scheduled weekend.
+          </p>
+        </Card>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+

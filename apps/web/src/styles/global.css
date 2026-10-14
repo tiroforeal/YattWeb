@@ -1,29 +1,132 @@
 @import "tailwindcss";
 
-@import "tailwindcss";
+@layer base {
+    :root {
+        /* Light Mode: Off-white backdrop, white surfaces, crisp dark text */
+        --bg-base: #f8fafc;
+        --surface: #ffffff;
+        --surface-hover: #f1f5f9;
+        --border-subtle: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-muted: #64748b;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --accent-subtle: #dbeafe;
+        --radius-card: 0.75rem;
+    }
+
+    html.dark {
+        /* Dark Mode: Deep backdrop, dark surfaces, crisp light text */
+        --bg-base: #09090b;
+        --surface: #121215;
+        --surface-hover: #18181b;
+        --border-subtle: #27272a;
+        --text-primary: #fafafa;
+        --text-muted: #a1a1aa;
+        --accent: #3b82f6;
+        --accent-hover: #60a5fa;
+        --accent-subtle: rgba(59, 130, 246, 0.15);
+        --radius-card: 0.75rem;
+    }
+
+    body {
+        background-color: var(--color-bg-base);
+        color: var(--color-text-primary);
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Crescent moon vs Sun circle visibility based on active theme */
+    :root:not(.dark) .theme-toggle-sun {
+        display: none !important;
+    }
+    :root:not(.dark) .theme-toggle-moon {
+        display: block !important;
+    }
+    html.dark .theme-toggle-moon {
+        display: none !important;
+    }
+    /* Lightbox Modal Dialog base styling */
+    dialog.lightbox-dialog {
+        display: none;
+    }
+    dialog.lightbox-dialog[open] {
+        display: flex;
+    }
+    dialog.lightbox-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+}
 
 @theme {
-    /* 1. Primitives: Clean Monochromes */
-    --color-ink-950: #09090b; /* Page background */
-    --color-ink-900: #121215; /* Card / Surface background */
-    --color-ink-850: #18181b; /* Elevated surface / hover */
-    --color-ink-700: #27272a; /* Borders, dividers */
-    --color-ink-500: #71717a; /* Subtle icons, muted details */
-    --color-ink-400: #a1a1aa; /* Secondary / muted text */
-    --color-ink-200: #e4e4e7; /* Primary headings / high contrast */
-    --color-paper:   #fafafa; /* Pure foreground text */
+    /* Semantic aliases mapped to dynamic CSS variables */
+    --color-bg-base: var(--bg-base);
+    --color-surface: var(--surface);
+    --color-surface-hover: var(--surface-hover);
+    --color-border-subtle: var(--border-subtle);
+    --color-text-primary: var(--text-primary);
+    --color-text-muted: var(--text-muted);
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-accent-subtle: var(--accent-subtle);
 
-    /* Optional single brand accent */
-    --color-accent:  #527ff1;
-
-    /* 2. Semantic Aliases used in markup */
-    --color-bg-base:        var(--color-ink-950);
-    --color-surface:        var(--color-ink-900);
-    --color-surface-hover:  var(--color-ink-850);
-    --color-border-subtle:  var(--color-ink-700);
-    --color-text-primary:   var(--color-paper);
-    --color-text-muted:     var(--color-ink-400);
-
-    /* Radius & Spacing rules */
     --radius-card: 0.75rem;
+}
+
+/* Portable text prose styling that adapts to active theme */
+.prose-custom {
+    color: var(--color-text-primary);
+    line-height: 1.75;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+    color: var(--color-text-primary);
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    letter-spacing: -0.02em;
+}
+
+.prose-custom h1 { font-size: 2rem; }
+.prose-custom h2 { font-size: 1.5rem; }
+.prose-custom h3 { font-size: 1.25rem; }
+
+.prose-custom p {
+    margin-bottom: 1.25em;
+    color: var(--color-text-muted);
+}
+
+.prose-custom a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+}
+
+.prose-custom a:hover {
+    color: var(--color-accent-hover);
+}
+
+.prose-custom ul,
+.prose-custom ol {
+    margin-bottom: 1.25em;
+    padding-left: 1.5em;
+    color: var(--color-text-muted);
+}
+
+.prose-custom li {
+    margin-bottom: 0.5em;
+}
+
+.prose-custom blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1rem;
+    margin: 1.5em 0;
+    color: var(--color-text-muted);
+    font-style: italic;
 }

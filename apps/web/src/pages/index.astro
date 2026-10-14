@@ -1,19 +1,70 @@
 ---
-// HOME
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/UI/Card.astro";
+---
 
-import BaseLayout from "../layouts/BaseLayout.astro";---
-
-<BaseLayout title="Welcome to the Outdoor Sports Club">
-    <header class="mb-10">
-        <h1 class="text-4xl font-extrabold text-emerald-400">Welcome to the Outdoor Sports Club</h1>
-        <p class="text-slate-400 mt-2">Join us for exciting outdoor adventures and activities!</p>
+<BaseLayout title="Home">
+    <!-- Page Header with standard vertical breathing room -->
+    <header class="mb-12">
+        <!--<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-accent bg-accent-subtle mb-4">
+            Outdoor Sports Club
+        </div>-->
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary">
+            Welcome to YATT
+        </h1>
+        <p class="text-text-muted text-lg mt-3 max-w-2xl">
+            Yokuş Aşağı Tırmanış Topluluğu (YATT) is a community of outdoor enthusiasts dedicated to hiking, climbing, and exploring the natural beauty of our region.
+            <br />
+            Join us for adventures, events, and camaraderie in the great outdoors.
+        </p>
     </header>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-emerald-400 mb-4">About Us</h2>
-            <p class="text-slate-300">YATT YATT YATT YATT YATT</p>
-        </div>
-    </section>
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card href="/activities" class="p-6 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-accent">Trips & Events</span>
+                <h2 class="text-xl font-bold text-text-primary group-hover:text-accent transition-colors">
+                    Club Activities &rarr;
+                </h2>
+                <p class="text-sm text-text-muted leading-relaxed">
+                    Browse upcoming hikes, group climbs, ski trips, and outdoor weekend events hosted by our guides.
+                </p>
+            </div>
+            <div class="pt-6">
+                <span class="text-xs font-medium text-accent">View all activities</span>
+            </div>
+        </Card>
 
+        <Card href="/members" class="p-6 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-accent">Our Community</span>
+                <h2 class="text-xl font-bold text-text-primary group-hover:text-accent transition-colors">
+                    Meet the Team &rarr;
+                </h2>
+                <p class="text-sm text-text-muted leading-relaxed">
+                    Get to know the trip leads, organizers, and outdoor enthusiasts who make every adventure happen.
+                </p>
+            </div>
+            <div class="pt-6">
+                <span class="text-xs font-medium text-accent">Explore member profiles</span>
+            </div>
+        </Card>
+
+        <Card href="/contact" class="p-6 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-accent">Connect</span>
+                <h2 class="text-xl font-bold text-text-primary group-hover:text-accent transition-colors">
+                    Get in Touch &rarr;
+                </h2>
+                <p class="text-sm text-text-muted leading-relaxed">
+                    Have questions about an upcoming event or want to partner with us? Drop us a message anytime.
+                </p>
+            </div>
+            <div class="pt-6">
+                <span class="text-xs font-medium text-accent">Contact us</span>
+            </div>
+        </Card>
+    </div>
 </BaseLayout>
+

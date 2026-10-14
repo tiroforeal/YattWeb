@@ -12,9 +12,9 @@ const Tag = href ? 'a' : 'div'; // dynamic tag
 <Tag
         href={href}
         class:list={[
-            "group block rounded-card bg-surface border border-border-subtle",
+            "group block rounded-card bg-surface border border-border-subtle shadow-xs",
             overflow === 'hidden' ? 'overflow-hidden' : 'overflow-visible',
-            "transition hover:border-text-primary",
+            href ? "transition-all duration-200 hover:border-accent hover:shadow-md" : "transition-all duration-200",
             className,
         ]}
 >

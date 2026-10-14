@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Card from '../UI/Card.astro';
 import Badge from '../UI/Badge.astro';
 import AvatarGroup, { type GroupMember } from '../UI/AvatarGroup.astro';
@@ -11,19 +12,22 @@ interface Props {
     excerpt?: string;
     imageUrl?: string;
     attendees?: GroupMember[];
+    loading?: 'lazy' | 'eager';
 }
 
-const { title, slug, date, location, excerpt, imageUrl, attendees } = Astro.props;
+const { title, slug, date, location, excerpt, imageUrl, attendees, loading = 'lazy' } = Astro.props;
 ---
 
 <Card href={`/activities/${slug}`} class="group flex flex-col h-full">
     {imageUrl && (
-            <div class="relative aspect-video w-full overflow-hidden bg-ink-900">
-                <img
+            <div class="relative aspect-video w-full overflow-hidden bg-surface-hover">
+                <Image
                         src={imageUrl}
                         alt={title}
+                        width={800}
+                        height={450}
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
+                        loading={loading}
                 />
             </div>
     )}
@@ -33,8 +37,8 @@ const { title, slug, date, location, excerpt, imageUrl, attendees } = Astro.prop
         <div class="flex-1 space-y-2">
             <div class="flex items-center gap-1.5 flex-wrap">
                 {date && <Badge>{new Date(date).toLocaleDateString()}</Badge>}
-                {date && location && <Badge> · </Badge>}
-                {location && <Badge class="text-ink-500">{location}</Badge>}
+                {date && location && <Badge> &bull; </Badge>}
+                {location && <Badge>{location}</Badge>}
             </div>
 
             <h3 class="text-lg font-semibold text-text-primary transition-colors group-hover:text-accent">
@@ -44,18 +48,13 @@ const { title, slug, date, location, excerpt, imageUrl, attendees } = Astro.prop
             {excerpt && <p class="text-sm text-text-muted line-clamp-2">{excerpt}</p>}
         </div>
 
-        <!-- Right Side Column: Avatars at the top, View event at the bottom -->
+        <!-- Right Side Column: Avatars at the top -->
         <div class="flex flex-col justify-between items-end shrink-0">
             {attendees && attendees.length > 0 ? (
-                <AvatarGroup members={attendees} limit={3} size="sm" />
+                <AvatarGroup members={attendees} limit={3} size="sm" loading={loading} />
             ) : (
                 <div class="h-8"></div>
             )}
-            <!--
-            <span class="mt-auto shrink-0 text-xs font-medium text-ink-500 group-hover:text-text-primary transition-colors pt-2">
-                View event &rarr;
-            </span>
-            -->
         </div>
     </div>
 </Card>

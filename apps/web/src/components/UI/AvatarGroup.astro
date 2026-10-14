@@ -15,6 +15,7 @@ interface Props {
     size?: 'sm' | 'md' | 'lg';
     class?: string;
     reserveCountSpace?: boolean;
+    loading?: 'lazy' | 'eager';
 }
 
 const {
@@ -23,6 +24,7 @@ const {
     size = 'sm',
     class: className,
     reserveCountSpace = false,
+    loading = 'eager',
 } = Astro.props;
 
 // 1. Sort members by priority descending (highest priority first: [P_high, P_mid, P_low, ...])
@@ -62,7 +64,7 @@ const overlapClass = size === 'sm' ? '-space-x-2' : size === 'md' ? '-space-x-2.
         <div class:list={["flex items-center", overlapClass]}>
             {displayMembers.map((member) => (
                 <div
-                    class="relative transition-transform duration-200 hover:scale-110 hover:z-30 cursor-default"
+                    class="group/avatar relative transition-transform duration-200 hover:scale-110 hover:z-30 cursor-pointer"
                     title={member.name}
                 >
                     <Avatar
@@ -70,6 +72,7 @@ const overlapClass = size === 'sm' ? '-space-x-2' : size === 'md' ? '-space-x-2.
                         src={member.avatarUrl}
                         alt={member.name}
                         size={size}
+                        loading={loading}
                     />
                 </div>
             ))}

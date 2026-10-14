@@ -9,7 +9,7 @@ const src = video.kind === 'iframe' && autoplay
     : video.src;
 ---
 <figure class="my-6">
-    <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md">
+    <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface border border-border-subtle shadow-md">
         {video.kind === 'file' ? (
                 <video src={src} controls preload="metadata" class="absolute inset-0 w-full h-full"></video>
         ) : (
@@ -24,7 +24,7 @@ const src = video.kind === 'iframe' && autoplay
     </div>
     {caption &&
             <figcaption
-                    class="text-center text-xs text-slate-400 mt-2 italic">{caption}
+                    class="text-center text-xs text-text-muted mt-2 italic">{caption}
             </figcaption>
     }
 </figure>

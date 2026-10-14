@@ -24,19 +24,20 @@ const members: Member[] = await sanityClient.fetch(`
 ---
 
 <BaseLayout title="Club Members">
-    <header class="mb-10">
+    <header class="mb-12">
         <h1 class="text-4xl font-extrabold text-text-primary tracking-tight">Our Members</h1>
         <p class="text-text-muted mt-2 text-base">Meet the guides, organizers, and outdoor enthusiasts behind YATT.</p>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {members.map((member) => (
+        {members.map((member, index) => (
             <MemberCard
                 name={member.name}
                 role={member.role}
                 bio={member.bio}
                 avatar={member.avatar}
                 priority={member.priority}
+                loading={index < 6 ? 'eager' : 'lazy'}
             />
         ))}
     </div>

@@ -10,6 +10,10 @@ import react from '@astrojs/react';
 export default defineConfig({
   adapter: node({ mode: "standalone" }),
 
+  image: {
+    domains: ['cdn.sanity.io'],
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },
@@ -20,6 +24,5 @@ export default defineConfig({
     useCdn: false,
     apiVersion: '2026-09-26',
     logClientRequests: 'dev',
-    studioBasePath: '/admin'
   }), react()]
 });

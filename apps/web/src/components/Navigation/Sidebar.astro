@@ -12,39 +12,94 @@ const navLinks = [
 <aside
         id="sidebar"
         data-open="true"
-        class=" group sticky top-0 h-screen w-64 shrink-0
+        class="group sticky top-0 h-screen w-64 shrink-0
          bg-surface border-r border-border-subtle p-6
+         flex flex-col justify-between z-40
          transition-[margin] duration-300 ease-in-out
          motion-reduce:transition-none
          data-[open=false]:-ml-64"
 >
-    <!-- tab sticking out of the sidebar's right edge -->
-    <span
-        id="sidebar-arrow"
-        class="transition-transform duration-300 group-data-[open=false]:rotate-180"
+    <!-- Tab sticking out of the sidebar's right edge: button surface stays constant -->
+    <button
+            id="sidebar-toggle"
+            aria-label="Toggle sidebar"
+            aria-expanded="true"
+            aria-controls="sidebar"
+            class="group/toggle absolute left-full top-6 flex h-28 w-28 items-center justify-center overflow-hidden
+                   rounded-r-full border border-l-0 border-border-subtle bg-surface
+                   cursor-pointer z-50 focus:outline-none"
     >
-        <button
-                id="sidebar-toggle"
-                aria-label="Toggle sidebar"
-                aria-expanded="true"
-                aria-controls="sidebar"
-                class="absolute left-full top-6 flex h-24 w-24 items-center justify-center
-               rounded-r-md border border-l-0 border-border-subtle bg-surface
-               text-text-muted hover:text-text-primary"
-        >
-            <span
-                    class="block size-24 bg-accent transition-colors hover:bg-white"
-                    style={`mask: url(${YattLogo.src}) center / contain no-repeat;
-                    -webkit-mask: url(${YattLogo.src}) center / contain no-repeat;`}
-                    aria-hidden="true"
-            ></span>
-            <!--<span id="sidebar-arrow" class="transition-transform duration-300">‹</span>-->
-        </button>
-    </span>
+        <span
+                class="yatt-logo-icon block size-36 shrink-0 bg-text-primary transition-colors duration-200
+                       group-hover/toggle:bg-accent group-active/toggle:bg-accent"
+                style={`mask: url(${YattLogo.src}) center / contain no-repeat;
+                -webkit-mask: url(${YattLogo.src}) center / contain no-repeat;`}
+                aria-hidden="true"
+        ></span>
+    </button>
 
+    <!-- Top Navigation Links in a vertical column from the top -->
     <nav class="space-y-2">
-        {navLinks.map((l) => <a href={l.href} class="block px-4 py-2.5 text-sm text-text-muted hover:text-text-primary">{l.name}</a>)}
+        {navLinks.map((l) => (
+            <a
+                href={l.href}
+                class="block px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary hover:bg-surface-hover rounded-lg transition-colors"
+            >
+                {l.name}
+            </a>
+        ))}
     </nav>
+
+    <!-- Bottom: Theme Swap Control inside the sidebar -->
+    <div class="pt-4 border-t border-border-subtle">
+        <button
+            id="theme-toggle"
+            type="button"
+            aria-label="Toggle light and dark mode"
+            title="Toggle theme (Light / Dark)"
+            class="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors cursor-pointer select-none"
+        >
+            <!-- Crescent moon icon (visible in light mode: click to go dark) -->
+            <svg
+                class="theme-toggle-moon size-5 shrink-0 text-text-muted group-hover:text-text-primary transition-transform duration-300 hover:rotate-12"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            </svg>
+
+            <!-- Sun / Circle icon (visible in dark mode: click to go light) -->
+            <svg
+                class="theme-toggle-sun size-5 shrink-0 text-text-muted group-hover:text-text-primary transition-transform duration-300 hover:rotate-45"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+            </svg>
+
+            <span id="theme-toggle-text" class="text-sm font-medium">Dark mode</span>
+        </button>
+    </div>
 </aside>
 
 <script is:inline>
@@ -80,6 +135,43 @@ const navLinks = [
         };
     }
 
+    function setupThemeToggle() {
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeText = document.getElementById('theme-toggle-text');
+        if (!themeToggle) return;
+
+        function updateToggleState() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (themeText) {
+                themeText.textContent = isDark ? 'Light mode' : 'Dark mode';
+            }
+            if (!themeToggle) return;
+            themeToggle.setAttribute(
+                'aria-label',
+                isDark ? 'Switch to light mode' : 'Switch to dark mode'
+            );
+        }
+
+        updateToggleState();
+
+        themeToggle.onclick = () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateToggleState();
+        };
+    }
+
     setupSidebar();
-    document.addEventListener('astro:page-load', setupSidebar);
+    setupThemeToggle();
+    document.addEventListener('astro:page-load', () => {
+        setupSidebar();
+        setupThemeToggle();
+    });
 </script>
+
